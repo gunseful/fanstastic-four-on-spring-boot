@@ -1,0 +1,17 @@
+body {
+    background: url("tlotr.png") no-repeat 50% 50% fixed;
+}
+
+div.b{
+    border: 10px solid white;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.7;
+    background-color: white;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+
+}

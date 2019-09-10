@@ -1,15 +1,20 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Spring Security Example </title>
+    <title>Registration</title>
+    <link href="<c:url value="/res/style.css"/>" rel="stylesheet" type="text/css"/>
+    <link rel="icon" type="image/png" href="<c:url value="/res/favicon.png"/>"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
-<div>
+<div class="b">
 <c:if test="${param.error}">
     Invalid username and password.
 </c:if>
-</div>
+
 
 <div>
     <c:if test="${param.logout}">
@@ -28,5 +33,6 @@ Registration
     <div><label> Password: <input type="password" name="password"/> </label></div>
     <div><input type="submit" value="Sign In"/></div>
 </form>
+</div>
 </body>
 </html>
