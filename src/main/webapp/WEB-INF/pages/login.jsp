@@ -11,14 +11,23 @@
 
 </head>
 <body>
-<div>
+<div class="header">
+    <p align="center"; style="font-size: 30px; color: white" >DIGITAL STORE</p>
 
 </div>
-
-<div>
-
+<div class="menu">
+    <table>
+        <tr>
+            <td><a href="/" class="w3-btn w3-black">Home</a>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="/registration" class="w3-btn w3-black">Registration</a>
+            </td>
+        </tr>
+    </table>
 </div>
-<div class="b">
+<div class="content">
     <caption class="heading">Login Page</caption>
     <c:if test="${param.error}">
         <caption class="heading">Invalid username and password.</caption>

@@ -9,22 +9,73 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
-<div class="b">
-    <h6>Orders</h6>
+<div class="header">
+    <p align="center" ; style="font-size: 30px; color: white">DIGITAL STORE</p>
+</div>
+<div class="menu">
     <table>
-        <%--        <tr>--%>
-        <%--            <th>ID</th>--%>
-        <%--            <th>NAME</th>--%>
-        <%--            <th>PRICE</th>--%>
-        <%--        </tr>--%>
-        <c:forEach var="product" items="${order.products}">
-            <p>${product.name} ${product.price}</p>
-        </c:forEach>
-        Общая сумма - ${order.totalPrice()}
-            <br>
-        <a href="/basket/${order.id}" class="w3-btn w3-black">Make Order</a>
+        <tr>
+            <td><a href="/" class="w3-btn w3-black">Home</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href="/orders" class="w3-btn w3-black">Orders</a>
+            </td>
+            <td>
+                <a href="/products" class="w3-btn w3-black">Products</a>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="/logout" class="w3-btn w3-black">Logout</a>
+            </td>
+        </tr>
     </table>
-    <a href="/logout" class="w3-btn w3-black">Logout</a>
+</div>
+<div class="content">
+    <h6>User Basket</h6>
+    <c:if test="${order.products.isEmpty()}">
+        <p>User basket is empty</p>
+    </c:if>
+
+    <c:if test="${!order.products.isEmpty()}">
+    <c:if test="${order.products.get(0)!=null}">
+
+
+
+
+        <table>
+            <tr>
+                <th>Product Name</th>
+                <th>Price (USD)</th>
+            </tr>
+            <c:forEach var="product" items="${order.products}">
+                <tr>
+                    <td>${product.name}</td>
+                    <td>${product.price}</td>
+                    <td><a href="/basket/product/${product.id}" class="w3-btn w3-black">Remove</a>
+                </tr>
+            </c:forEach>
+            <tr>
+                <td>Total price</td>
+                <td>${order.totalPrice()}</td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td><a href="/basket/${order.id}" class="w3-btn w3-black">Make Order</a>
+                </td>
+            </tr>
+        </table>
+    </c:if>
+    <c:if test="${order.products.get(0)==null}">
+        <p>User basket is empty</p>
+
+    </c:if>
+
+
+    </c:if>
+
+
 </div>
 </body>
 </html>
