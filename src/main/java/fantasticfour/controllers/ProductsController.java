@@ -2,10 +2,11 @@ package fantasticfour.controllers;
 
 import fantasticfour.controllers.dao.OrderDao;
 import fantasticfour.controllers.dao.ProductDao;
-import fantasticfour.entity.Order;
 import fantasticfour.entity.Product;
+import fantasticfour.entity.Role;
 import fantasticfour.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 @Controller
+@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
 public class ProductsController {
 
     @Autowired
@@ -27,12 +28,17 @@ public class ProductsController {
     private OrderDao orderDao;
 
     @GetMapping("/")
-    public String home(Model model) {
+    public String home() {
         return "home";
     }
 
     @GetMapping("/products")
-    public String getProducts(Model model) {
+    public String getProducts(Model model, @AuthenticationPrincipal User user) {
+        model.addAttribute("user", user);
+        model.addAttribute("admin", Role.ADMIN);
+        if(user.getRoles().contains(Role.ADMIN)){
+            model.addAttribute("userlist","/user");
+        }
         Iterable<Product> products = productDao.findAll();
         model.addAttribute("products", products);
         return "products";
@@ -46,19 +52,17 @@ public class ProductsController {
             Model model) {
         var product = new Product(name, price);
         productDao.save(product);
-        System.out.println(user);
-
         Iterable<Product> products = productDao.findAll();
         model.addAttribute("products", products);
 
-        return "products";
+        return "redirect:/products";
     }
 
     @GetMapping("/products/{id}")
-    public String deleteProduct(@PathVariable("id") int id, Model model) {
+    public String deleteProduct(@PathVariable("id") int id, Model model, @AuthenticationPrincipal User user) {
+        orderDao.findAll().forEach(p -> p.getProducts().keySet().stream().filter(o -> o.getId()==id).forEach(o -> p.getProducts().remove(o)));
         productDao.deleteById(id);
-        getProducts(model);
-        return getProducts(model);
+        return getProducts(model, user);
     }
 
 }

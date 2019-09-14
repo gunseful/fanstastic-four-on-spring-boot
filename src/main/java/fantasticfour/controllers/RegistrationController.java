@@ -13,8 +13,12 @@ import java.util.Collections;
 
 @Controller
 public class RegistrationController {
-    @Autowired
-    private UserDao userDao;
+
+    private final UserDao userDao;
+
+    public RegistrationController(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @GetMapping("/registration")
     public String registration() {

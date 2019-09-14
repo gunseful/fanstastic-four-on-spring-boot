@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>FILMS</title>
+    <title>DIGITAL STORE</title>
     <link href="<c:url value="/res/style.css"/>" rel="stylesheet" type="text/css"/>
     <link rel="icon" type="image/png" href="<c:url value="/res/favicon.png"/>"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +11,7 @@
 <body>
 
 <div class="header">
-    <p align="center"; style="font-size: 30px; color: white" >DIGITAL STORE</p>
+    <p align="center" ; style="font-size: 30px; color: white">DIGITAL STORE</p>
 
 </div>
 <div class="menu">
@@ -24,10 +24,20 @@
             <td>
                 <a href="/orders" class="w3-btn w3-black">Orders</a>
             </td>
-            <td>
-                <a href="/basket" class="w3-btn w3-black">Basket</a>
-            </td>
+            <c:if test="${!user.roles.contains(admin)}">
+                <td>
+                    <a href="/basket" class="w3-btn w3-black">Basket</a>
+                </td>
+            </c:if>
         </tr>
+
+        <c:if test="${user.roles.contains(admin)}">
+            <tr>
+                <td><a href="/user" class="w3-btn w3-black">Users</a>
+                </td>
+            </tr>
+        </c:if>
+
         <tr>
             <td><a href="/logout" class="w3-btn w3-black">Logout</a>
             </td>
@@ -37,11 +47,13 @@
 <div class="content">
     <h6 style="align-content: center">Products</h6>
 
+    <c:if test="${user.roles.contains(admin)}">
         <form method="post">
             <input type="text" name="name" placeholder="Название товара" required="required">
             <input type="number" name="price" placeholder="Введите цену товара" required="required">
             <button type="submit" class="w3-btn w3-black">Добавить</button>
         </form>
+    </c:if>
 
     <table>
         <tr>
@@ -54,8 +66,12 @@
                 <td>${product.getId()}</td>
                 <td>${product.getName()}</td>
                 <td>${product.getPrice()}</td>
-                <td><a href="/products/${product.getId()}" class="w3-btn w3-black">Delete</a></td>
-                <td><a href="/products-to-basket/${product.getId()}" class="w3-btn w3-black">Add to BASKET</a></td>
+                <c:if test="${user.roles.contains(admin)}">
+                    <td><a href="/products/${product.getId()}" class="w3-btn w3-black">Delete</a></td>
+                </c:if>
+                <c:if test="${!user.roles.contains(admin)}">
+                    <td><a href="/products-to-basket/${product.getId()}" class="w3-btn w3-black">Add to BASKET</a></td>
+                </c:if>
 
             </tr>
         </c:forEach>

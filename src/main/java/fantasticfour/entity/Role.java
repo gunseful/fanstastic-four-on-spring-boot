@@ -3,7 +3,9 @@ package fantasticfour.entity;
 import org.springframework.security.core.GrantedAuthority;
 
 public enum Role implements GrantedAuthority {
-    USER;
+    USER,
+    ADMIN,
+    BLOCKED;
 
     @Override
     public String getAuthority() {

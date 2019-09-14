@@ -34,31 +34,37 @@
 </div>
 <div class="content">
     <h6>User Basket</h6>
-    <c:if test="${order.products.isEmpty()}">
+    <c:if test="${order.products.keySet().isEmpty()}">
         <p>User basket is empty</p>
     </c:if>
 
-    <c:if test="${!order.products.isEmpty()}">
-    <c:if test="${order.products.get(0)!=null}">
-
-
+    <c:if test="${!order.products.keySet().isEmpty()}">
+        User basket is Empty
+    </c:if>
+    <c:if test="${order.products.keySet().size()>0}">
 
 
         <table>
             <tr>
                 <th>Product Name</th>
+                <th>Count</th>
                 <th>Price (USD)</th>
+
             </tr>
             <c:forEach var="product" items="${order.products}">
                 <tr>
-                    <td>${product.name}</td>
-                    <td>${product.price}</td>
-                    <td><a href="/basket/product/${product.id}" class="w3-btn w3-black">Remove</a>
+                    <td>${product.key.name}</td>
+                    <td><a href="/basket/product/minus/${product.key.id}" class="w3-btn w3-black">-</a>
+                            ${product.value} <a href="/basket/product/plus/${product.key.id}"
+                                                class="w3-btn w3-black">+</a></td>
+                    <td align="center">${product.key.price}</td>
+                    <td><a href="/basket/product/${product.key.id}" class="w3-btn w3-black">Remove</a>
                 </tr>
             </c:forEach>
             <tr>
-                <td>Total price</td>
-                <td>${order.totalPrice()}</td>
+                <th>Total price</th>
+                <td></td>
+                <td align="center">${order.totalPrice()}</td>
             </tr>
             <tr></tr>
             <tr>
@@ -66,13 +72,10 @@
                 </td>
             </tr>
         </table>
-    </c:if>
-    <c:if test="${order.products.get(0)==null}">
-        <p>User basket is empty</p>
 
     </c:if>
-
-
+    <c:if test="${order.products.keySet().size()<=0}">
+        User basket is Empty
     </c:if>
 
 

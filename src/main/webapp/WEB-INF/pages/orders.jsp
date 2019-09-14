@@ -23,10 +23,18 @@
             <td>
                 <a href="/products" class="w3-btn w3-black">Products</a>
             </td>
-            <td>
-                <a href="/basket" class="w3-btn w3-black">Basket</a>
+            <c:if test="${!user.roles.contains(admin)}">
+                <td>
+                    <a href="/basket" class="w3-btn w3-black">Basket</a>
+                </td>
+            </c:if>
+        </tr>
+        <c:if test="${user.roles.contains(admin)}">
+        <tr>
+            <td><a href="/user" class="w3-btn w3-black">Users</a>
             </td>
         </tr>
+        </c:if>
         <tr>
             <td><a href="/logout" class="w3-btn w3-black">Logout</a>
             </td>
@@ -41,53 +49,81 @@
     </c:if>
 
     <c:if test="${!orders.isEmpty()}">
-    <c:forEach var="order" items="${orders}">
-        <table>
-            <tr>
-                <th style="text-align:left">
-                    ORDER ID
-                </th>
-                <td>${order.id}</td>
-                <td><a href="/orders/${order.id}" class="w3-btn w3-black">Delete</a></td>
-            </tr>
-            <tr>
-                <th style="text-align:left">
-                    User name
-                </th>
-                <td>${order.user.username}</td>
-            </tr>
-            <tr>
-                <th style="text-align:left">
-                    Status
-                </th>
-                <td>${order.status}</td>
-                <td><a href="/orders/paid/${order.id}" class="w3-btn w3-black">Paid</a>
-                </td>
-            </tr>
-            <tr>
-                <table>
-                    <tr>
-                        <th>Product id</th>
-                        <th>Product name</th>
-                        <th>Price (USD)</th>
-                    </tr>
-                    <c:forEach var="product" items="${order.products}">
+        <c:forEach var="order" items="${orders}">
+            <table>
+                <tr>
+                    <th style="text-align:left">
+                        ORDER ID
+                    </th>
+                    <td>${order.id}</td>
+                    <td><a href="/orders/${order.id}" class="w3-btn w3-black">Delete</a></td>
+                </tr>
+                <tr>
+                    <th style="text-align:left">
+                        ORDER DATE
+                    </th>
+                    <td>${order.date}</td>
+                </tr>
+                <tr>
+                    <th style="text-align:left">
+                        User name
+                    </th>
+                    <td>${order.user.username}</td>
+                    <td>
+                        <c:if test="${user.roles.contains(admin)}">
+                            <c:if test="${order.user.roles.contains(block)}">
+                                Blocked
+                            </c:if>
+                            <c:if test="${!order.user.roles.contains(block)}">
+                                <a href="/user/block/${order.user.id}" class="w3-btn w3-black">Block user</a>
+                            </c:if>
+                        </c:if>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align:left">
+                        Status
+                    </th>
+                    <td>${order.status}</td>
+                    <td>
+                        <c:if test="${!order.status.equals(paid)}">
+                        <c:if test="${!user.roles.contains(admin)}">
+                            <a href="/orders/paid/${order.id}" class="w3-btn w3-black">Paid</a>
+                        </c:if>
+                        </c:if>
+                    </td>
+                </tr>
+                <tr>
+                    <table>
                         <tr>
-                            <td>${product.id}</td>
-                            <td>${product.name}</td>
-                            <td>${product.price}</td>
+                            <th>Product id</th>
+                            <th>Product name</th>
+                            <th>Count</th>
+                            <th>Price (USD)</th>
+
                         </tr>
-                    </c:forEach>
-                    <tr>
-                        <td>Total price</td>
-                        <td></td>
-                        <td>${order.totalPrice()}</td>
-                    </tr>
-                </table>
-                <p>-------------------------------------</p>
-            </tr>
-        </table>
-    </c:forEach>
+                        <c:forEach var="product" items="${order.products}">
+                            <tr>
+                                <td>${product.key.id}</td>
+                                <td>${product.key.name}</td>
+                                <td align="center">${product.value}</td>
+                                <td align="center">${product.key.price}</td>
+
+                            </tr>
+                        </c:forEach>
+                        <tr>
+                            <th>Total price</th>
+                            <td></td>
+                            <td></td>
+                            <td align="center">${order.totalPrice()}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" align="center"> ---------------------------------- </td>
+                        </tr>
+                    </table>
+                </tr>
+            </table>
+        </c:forEach>
     </c:if>
 
 </div>
