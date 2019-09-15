@@ -6,7 +6,6 @@ import fantasticfour.entity.Order;
 import fantasticfour.entity.Product;
 import fantasticfour.entity.Role;
 import fantasticfour.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -14,19 +13,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
 public class OrderController {
 
-    @Autowired
-    private ProductDao productDao;
+    private final ProductDao productDao;
 
-    @Autowired
-    private OrderDao orderDao;
+    private final OrderDao orderDao;
+
+    public OrderController(ProductDao productDao, OrderDao orderDao) {
+        this.productDao = productDao;
+        this.orderDao = orderDao;
+    }
 
 
     @GetMapping("/products-to-basket/{id}")
@@ -35,8 +39,7 @@ public class OrderController {
             @PathVariable("id") int id, Model model) {
         if (orderDao.findByUserAndStatus(user, "not_ordered") == null) {
             Order order = new Order();
-            order.setProducts(new HashMap<Product, Integer>());
-            //            order.setProducts(new ArrayList<>());
+            order.setProducts(new HashMap<>());
             order.setUser(user);
             order.setStatus("not_ordered");
             order.setDate(java.sql.Date.valueOf(LocalDate.now()));
@@ -45,7 +48,7 @@ public class OrderController {
         var order = orderDao.findByUserAndStatus(user, "not_ordered");
         var products = order.getProducts();
         var product = productDao.findById(id).orElse(null);
-        if (products.keySet().contains(product)) {
+        if (products.containsKey(product)) {
             products.put(product, products.get(product) + 1);
         } else {
             products.put(product, 1);
@@ -58,7 +61,7 @@ public class OrderController {
     @GetMapping("/basket/product/plus/{id}")
     public String plusProduct(
             @AuthenticationPrincipal User user,
-            @PathVariable("id") int id, Model model) {
+            @PathVariable("id") int id) {
 
         var order = orderDao.findByUserAndStatus(user, "not_ordered");
         var products = order.getProducts();
@@ -73,7 +76,7 @@ public class OrderController {
     @GetMapping("/basket/product/minus/{id}")
     public String minusProduct(
             @AuthenticationPrincipal User user,
-            @PathVariable("id") int id, Model model) {
+            @PathVariable("id") int id) {
 
         var order = orderDao.findByUserAndStatus(user, "not_ordered");
         var products = order.getProducts();
@@ -96,9 +99,8 @@ public class OrderController {
     }
 
     @GetMapping("/basket/{id}")
-    public String makeOrder(@AuthenticationPrincipal User user,
-                            Model model, @PathVariable int id) {
-        var order = orderDao.findById(id).orElse(null);
+    public String makeOrder(@PathVariable int id) {
+        var order = orderDao.findById(id).orElseThrow(NullPointerException::new);
         order.setStatus("ordered");
         order.setDate(java.sql.Date.valueOf(LocalDate.now()));
         orderDao.save(order);
@@ -127,17 +129,15 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{id}")
-    public String deleteOrder(@AuthenticationPrincipal User user,
-                              Model model, @PathVariable int id) {
-        var order = orderDao.findById(id);
-        orderDao.delete(order.get());
+    public String deleteOrder(@PathVariable int id) {
+        var order = orderDao.findById(id).orElseThrow(NullPointerException::new);
+        orderDao.delete(order);
         return "redirect:/orders";
     }
 
     @GetMapping("/orders/paid/{id}")
-    public String makePaid(@AuthenticationPrincipal User user,
-                           Model model, @PathVariable int id) {
-        var order = orderDao.findById(id).get();
+    public String makePaid(@PathVariable int id) {
+        var order = orderDao.findById(id).orElseThrow(NullPointerException::new);
         order.setStatus("paid");
         orderDao.save(order);
         return "redirect:/orders";
@@ -145,12 +145,11 @@ public class OrderController {
 
     @GetMapping("/basket/product/{id}")
     public String deleteFromBasket(@AuthenticationPrincipal User user,
-                                   Model model, @PathVariable int id) {
+                                   @PathVariable int id) {
 
         var order = orderDao.findByUserAndStatus(user, "not_ordered");
         System.out.println(order);
         Map<Product, Integer> products = order.getProducts();
-//        List<Product> products = order.getProducts();
         Product productForDelete = null;
         for (Product product : products.keySet()) {
             if (product.getId() == id) {

@@ -5,7 +5,6 @@ import fantasticfour.controllers.dao.ProductDao;
 import fantasticfour.entity.Product;
 import fantasticfour.entity.Role;
 import fantasticfour.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -15,17 +14,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Map;
-
 @Controller
 @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
 public class ProductsController {
 
-    @Autowired
-    private ProductDao productDao;
+    private final ProductDao productDao;
 
-    @Autowired
-    private OrderDao orderDao;
+    private final OrderDao orderDao;
+
+    public ProductsController(ProductDao productDao, OrderDao orderDao) {
+        this.productDao = productDao;
+        this.orderDao = orderDao;
+    }
 
     @GetMapping("/")
     public String home() {
@@ -46,7 +46,6 @@ public class ProductsController {
 
     @PostMapping("/products")
     public String addNewProduct(
-            @AuthenticationPrincipal User user,
             @RequestParam String name,
             @RequestParam double price,
             Model model) {

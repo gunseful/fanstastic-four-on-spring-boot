@@ -1,18 +1,13 @@
-package fantasticfour.controllers.service;
+package fantasticfour.controllers;
 
 import fantasticfour.controllers.dao.UserDao;
 import fantasticfour.entity.Role;
-import fantasticfour.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
@@ -40,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("block/{userId}")
-    public String blockUser(@PathVariable int userId, Model model) {
+    public String blockUser(@PathVariable int userId) {
         var user = userDao.findById(userId).orElse(null);
         if (user != null) {
             user.getRoles().clear();

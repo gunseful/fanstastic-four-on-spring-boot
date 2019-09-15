@@ -1,4 +1,4 @@
-package fantasticfour.controllers.service;
+package fantasticfour.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
