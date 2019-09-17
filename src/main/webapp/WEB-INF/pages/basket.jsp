@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>FILMS</title>
+    <title>BASKET</title>
     <link href="<c:url value="/res/style.css"/>" rel="stylesheet" type="text/css"/>
     <link rel="icon" type="image/png" href="<c:url value="/res/favicon.png"/>"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -37,12 +37,7 @@
     <c:if test="${order.products.keySet().isEmpty()}">
         <p>User basket is empty</p>
     </c:if>
-
-    <c:if test="${!order.products.keySet().isEmpty()}">
-        User basket is Empty
-    </c:if>
     <c:if test="${order.products.keySet().size()>0}">
-
 
         <table>
             <tr>

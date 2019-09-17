@@ -1,7 +1,6 @@
 package fantasticfour.controllers;
 
-import fantasticfour.controllers.dao.OrderDao;
-import fantasticfour.controllers.dao.ProductDao;
+import fantasticfour.controllers.service.ProductService;
 import fantasticfour.entity.Product;
 import fantasticfour.entity.Role;
 import fantasticfour.entity.User;
@@ -18,18 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
 public class ProductsController {
 
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    private final OrderDao orderDao;
-
-    public ProductsController(ProductDao productDao, OrderDao orderDao) {
-        this.productDao = productDao;
-        this.orderDao = orderDao;
-    }
-
-    @GetMapping("/")
-    public String home() {
-        return "home";
+    public ProductsController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/products")
@@ -39,7 +30,7 @@ public class ProductsController {
         if(user.getRoles().contains(Role.ADMIN)){
             model.addAttribute("userlist","/user");
         }
-        Iterable<Product> products = productDao.findAll();
+        Iterable<Product> products = productService.findAll();
         model.addAttribute("products", products);
         return "products";
     }
@@ -50,18 +41,16 @@ public class ProductsController {
             @RequestParam double price,
             Model model) {
         var product = new Product(name, price);
-        productDao.save(product);
-        Iterable<Product> products = productDao.findAll();
-        model.addAttribute("products", products);
+        productService.save(product);
+        model.addAttribute("products", productService.findAll());
 
         return "redirect:/products";
     }
 
     @GetMapping("/products/{id}")
-    public String deleteProduct(@PathVariable("id") int id, Model model, @AuthenticationPrincipal User user) {
-        orderDao.findAll().forEach(p -> p.getProducts().keySet().stream().filter(o -> o.getId()==id).forEach(o -> p.getProducts().remove(o)));
-        productDao.deleteById(id);
-        return getProducts(model, user);
+    public String deleteProduct(@PathVariable("id") int id) {
+        productService.deleteProduct(id);
+        return "redirect:/products";
     }
 
 }

@@ -1,22 +1,20 @@
 package fantasticfour.controllers;
 
-import fantasticfour.controllers.dao.UserDao;
-import fantasticfour.entity.Role;
+import fantasticfour.controllers.service.UserService;
 import fantasticfour.entity.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.Collections;
 
 @Controller
 public class RegistrationController {
 
-    private final UserDao userDao;
+    private UserService userService;
 
-    public RegistrationController(UserDao userDao) {
-        this.userDao = userDao;
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/registration")
@@ -25,15 +23,13 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addUser(User user, Model model) {
-        var userFromDb = userDao.findByUsername(user.getUsername());
+    public String addUser(@ModelAttribute User user, Model model) {
+        var userFromDb = userService.findByUsername(user.getUsername());
         if (userFromDb != null) {
             model.addAttribute("message", "User exist!");
             return "registration";
         }
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        userDao.save(user);
+        userService.addUser(user);
         return "redirect:/login";
     }
 }

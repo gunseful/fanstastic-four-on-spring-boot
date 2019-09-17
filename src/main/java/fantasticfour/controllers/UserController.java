@@ -1,6 +1,6 @@
 package fantasticfour.controllers;
 
-import fantasticfour.controllers.dao.UserDao;
+import fantasticfour.controllers.service.UserService;
 import fantasticfour.entity.Role;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,34 +14,29 @@ import java.util.Map;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
 
-    private final UserDao userDao;
+    private final UserService userService;
 
-    public UserController(UserDao userDao) {
-        this.userDao = userDao;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public String userList(Model model) {
-        model.addAttribute("userlist", userDao.findAll());
+        model.addAttribute("userlist", userService.findAll());
 
         return "userList";
     }
 
     @GetMapping("{userId}")
     public String userEditForm(@PathVariable int userId, Model model) {
-        model.addAttribute("user", userDao.findById(userId).orElse(null));
+        model.addAttribute("user", userService.findById(userId));
         model.addAttribute("roles", Role.values());
         return "userEdit";
     }
 
     @GetMapping("block/{userId}")
     public String blockUser(@PathVariable int userId) {
-        var user = userDao.findById(userId).orElse(null);
-        if (user != null) {
-            user.getRoles().clear();
-            user.getRoles().add(Role.BLOCKED);
-            userDao.save(user);
-        }
+        userService.blockUser(userId);
         return "redirect:/orders";
     }
 
@@ -49,17 +44,7 @@ public class UserController {
     public String userSave(@RequestParam("userId") int userId,
                            @RequestParam Map<String, String> form,
                            @RequestParam String username) {
-        var user = userDao.findById(userId).orElse(null);
-        if (user != null) {
-            user.setUsername(username);
-            user.getRoles().clear();
-            user.getRoles().add(Role.valueOf(form.get("role")));
-            userDao.save(user);
-        }
+        userService.saveUser(userId, username, form);
         return "redirect:/user";
     }
-
-
-
-
 }
