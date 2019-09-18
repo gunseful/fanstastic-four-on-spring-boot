@@ -2,6 +2,8 @@ package fantasticfour.controllers;
 
 import fantasticfour.controllers.service.UserService;
 import fantasticfour.entity.Role;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,9 @@ import java.util.Map;
 @RequestMapping("/user")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
+
+    public static Logger logger = LogManager.getLogger();
+
 
     private final UserService userService;
 
@@ -37,6 +42,7 @@ public class UserController {
     @GetMapping("block/{userId}")
     public String blockUser(@PathVariable int userId) {
         userService.blockUser(userId);
+        logger.info("User id={} was blocked", userId);
         return "redirect:/orders";
     }
 

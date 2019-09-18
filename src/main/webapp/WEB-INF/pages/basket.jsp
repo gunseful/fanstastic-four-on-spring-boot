@@ -34,7 +34,7 @@
 </div>
 <div class="content">
     <h6>User Basket</h6>
-    <c:if test="${order.products.keySet().isEmpty()}">
+    <c:if test="${order.products.keySet()==null}">
         <p>User basket is empty</p>
     </c:if>
     <c:if test="${order.products.keySet().size()>0}">

@@ -3,6 +3,8 @@ package fantasticfour.controllers;
 import fantasticfour.controllers.service.OrderService;
 import fantasticfour.entity.Role;
 import fantasticfour.entity.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
 public class OrderController {
+
+    public static Logger logger = LogManager.getLogger();
+
 
     private final OrderService orderService;
 
@@ -74,12 +79,15 @@ public class OrderController {
     @GetMapping("/orders/{id}")
     public String deleteOrder(@PathVariable int id) {
         orderService.deleteOrder(id);
+        logger.info("Order id={} has been deleted", id);
+
         return "redirect:/orders";
     }
 
     @GetMapping("/orders/paid/{id}")
     public String makePaid(@PathVariable int id) {
         orderService.makePaid(id);
+        logger.info("Order id={} has changed status to PAID", id);
         return "redirect:/orders";
     }
 
@@ -88,6 +96,7 @@ public class OrderController {
                                    @PathVariable int id) {
 
         orderService.deleteFromBasket(user, id);
+
         return "redirect:/basket";
     }
 }

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
     <title>Digital Store</title>
@@ -12,7 +13,8 @@
 <div class="header">
     <p align="center"; style="font-size: 30px">DIGITAL STORE</p>
 </div>
-<div class="b">
+<div class="content">
+    <h1><spring:message code="greeting" text="default"/></h1>
     <a href="/products" class="w3-btn w3-black">To Products!</a>
 </div>
 </body>

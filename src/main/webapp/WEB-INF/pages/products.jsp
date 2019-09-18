@@ -48,9 +48,10 @@
     <h6 style="align-content: center">Products</h6>
 
     <c:if test="${user.roles.contains(admin)}">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <input type="text" name="name" placeholder="Название товара" required="required">
             <input type="number" name="price" placeholder="Введите цену товара" required="required">
+            <input type="file" name="file">
             <button type="submit" class="w3-btn w3-black">Добавить</button>
         </form>
     </c:if>
@@ -66,6 +67,7 @@
                 <td>${product.getId()}</td>
                 <td>${product.getName()}</td>
                 <td>${product.getPrice()}</td>
+
                 <c:if test="${user.roles.contains(admin)}">
                     <td><a href="/products/${product.getId()}" class="w3-btn w3-black">Delete</a></td>
                 </c:if>
@@ -73,6 +75,12 @@
                     <td><a href="/products-to-basket/${product.getId()}" class="w3-btn w3-black">Add to BASKET</a></td>
                 </c:if>
 
+            </tr>
+            <tr>
+                <td colspan="5" align="center"><c:if test="${product.filename!=null}">
+                    <img src="/img/${product.filename}">
+                </c:if>
+                </td>
             </tr>
         </c:forEach>
     </table>

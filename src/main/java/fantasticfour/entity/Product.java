@@ -10,6 +10,7 @@ public class Product {
     private int id;
     private String name;
     private double price;
+    private String filename;
 
     public Product() {
     }
@@ -41,5 +42,13 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }
