@@ -1,6 +1,7 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <html>
 <head>
     <title>Registration</title>
@@ -11,34 +12,50 @@
 </head>
 <body>
 <div class="header">
-    <p align="center"; style="font-size: 30px; color: white" >DIGITAL STORE</p>
+    <span style="color: white"><spring:message code="lang.change" text="default"/></span>:
+    <select id="locales">
+        <option value=""></option>
+        <option value="fr"><spring:message code="lang.fr" text="default"/></option>
+        <option value="ru"><spring:message code="lang.ru" text="default"/></option>
+        <option value="gb"><spring:message code="lang.gb" text="default"/></option>
+
+    </select>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#locales").change(function () {
+                var selectedOption = $('#locales').val();
+                if (selectedOption != ''){
+                    window.location.replace('?lang=' + selectedOption);
+                }
+            });
+        });
+    </script>
+    <p align="center"; style="font-size: 20px; color: white" >DIGITAL STORE</p>
 </div>
 <div class="menu">
     <table>
         <tr>
-            <td><a href="/" class="w3-btn w3-black">Home</a>
+            <td><a href="/" class="w3-btn w3-black"><spring:message code="home" text="default"/></a>
             </td>
         </tr>
         <tr>
-            <td><a href="/login" class="w3-btn w3-black">Log in</a>
+            <td><a href="/login" class="w3-btn w3-black"><spring:message code="login.page" text="default"/></a>
             </td>
         </tr>
     </table>
 </div>
 <div class="content">
 <c:if test="${param.error}">
-    Invalid username and password.
+    ><spring:message code="invalid" text="default"/>
 </c:if>
-<div>
-    <c:if test="${param.logout}">
-        You have been logged out.
-    </c:if>
-</div>
-Registration
+
+    <spring:message code="registration" text="default"/>
 <form action="/registration" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <button type="submit" class="w3-btn w3-black">Sign Up</button>
+    <div><label><spring:message code="user.name" text="default"/><input type="text" name="username"/> </label></div>
+    <div><label><spring:message code="password" text="default"/><input type="password" name="password"/> </label></div>
+    <button type="submit" class="w3-btn w3-black"><spring:message code="sign.up" text="default"/></button>
 </form>
 </div>
 </body>

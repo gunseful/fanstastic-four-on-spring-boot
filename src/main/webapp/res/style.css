@@ -16,7 +16,7 @@ div.header{
     padding: 20px;
     background-color: black;
     width:100%;
-    height:100px;
+    height:130px;
 }
 div.menu{
     border-radius: 10px;
@@ -42,7 +42,7 @@ div.content{
     width:max-content;
     position:absolute;
     left:350px;
-    top:150px;
+    top:180px;
     height: max-content;
 
 }

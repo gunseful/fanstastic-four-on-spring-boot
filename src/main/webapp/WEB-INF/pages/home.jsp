@@ -11,11 +11,44 @@
 </head>
 <body>
 <div class="header">
-    <p align="center"; style="font-size: 30px">DIGITAL STORE</p>
+    <span style="color: white"><spring:message code="lang.change" text="default"/></span>:
+    <select id="locales">
+        <option value=""></option>
+        <option value="fr"><spring:message code="lang.fr" text="default"/></option>
+        <option value="ru"><spring:message code="lang.ru" text="default"/></option>
+        <option value="gb"><spring:message code="lang.gb" text="default"/></option>
+
+    </select>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#locales").change(function () {
+                var selectedOption = $('#locales').val();
+                if (selectedOption != ''){
+                    window.location.replace('?lang=' + selectedOption);
+                }
+            });
+        });
+    </script>
+    <p align="center"; style="font-size: 20px; color: white" >DIGITAL STORE</p>
+</div>
+<div class="menu">
+    <table>
+        <tr>
+            <td><a href="/" class="w3-btn w3-black"><spring:message code="home" text="default"/></a>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="/registration" class="w3-btn w3-black"><spring:message code="registration" text="default"/></a>
+            </td>
+        </tr>
+    </table>
 </div>
 <div class="content">
+
     <h1><spring:message code="greeting" text="default"/></h1>
-    <a href="/products" class="w3-btn w3-black">To Products!</a>
+    <a href="/products" class="w3-btn w3-black"><spring:message code="to.products" text="default"/></a>
 </div>
 </body>
 </html>
