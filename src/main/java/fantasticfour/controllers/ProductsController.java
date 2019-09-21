@@ -11,21 +11,20 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 @Controller
+@RequestMapping("/products")
 @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
 public class ProductsController {
 
-    public static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
 
     private final ProductService productService;
 
@@ -36,7 +35,7 @@ public class ProductsController {
     @Value("${upload.path}")
     private String uploadPath;
 
-    @GetMapping("/products")
+    @GetMapping
     public String getProducts(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("user", user);
         model.addAttribute("admin", Role.ADMIN);
@@ -48,7 +47,7 @@ public class ProductsController {
         return "products";
     }
 
-    @PostMapping("/products")
+    @PostMapping
     public String addNewProduct(
             @RequestParam("file") MultipartFile file,
             @RequestParam String name,
@@ -56,27 +55,24 @@ public class ProductsController {
             Model model) throws IOException {
         var product = new Product(name, price);
 
-        if(file!=null && !file.getOriginalFilename().isEmpty()){
+        if(file!=null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()){
             File uploadFolder = new File(uploadPath);
             if(uploadFolder.exists()){
                 uploadFolder.mkdir();
             }
-
             String uuidFile = UUID.randomUUID().toString();
             String resultFileName = uuidFile + "." + file.getOriginalFilename();
 
             file.transferTo(new File(uploadPath+"/"+resultFileName));
-
             product.setFilename(resultFileName);
         }
         productService.save(product);
         logger.info("Added new product name={}", product.getName());
         model.addAttribute("products", productService.findAll());
-
         return "redirect:/products";
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("{id}")
     public String deleteProduct(@PathVariable("id") int id) {
         productService.deleteProduct(id);
         logger.info("Deleted product id={}", id);

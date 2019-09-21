@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
 public class OrderController {
 
-    public static Logger logger = LogManager.getLogger();
-
+    private static Logger logger = LogManager.getLogger();
 
     private final OrderService orderService;
 
@@ -26,7 +25,7 @@ public class OrderController {
     }
 
 
-    @GetMapping("/products-to-basket/{id}")
+    @GetMapping("/basket/add/{id}")
     public String addToUserBasket(
             @AuthenticationPrincipal User user,
             @PathVariable("id") int id) {
@@ -96,7 +95,6 @@ public class OrderController {
                                    @PathVariable int id) {
 
         orderService.deleteFromBasket(user, id);
-
         return "redirect:/basket";
     }
 }

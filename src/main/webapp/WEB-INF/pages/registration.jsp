@@ -53,8 +53,17 @@
 
     <spring:message code="registration" text="default"/>
 <form action="/registration" method="post">
-    <div><label><spring:message code="user.name" text="default"/><input type="text" name="username"/> </label></div>
-    <div><label><spring:message code="password" text="default"/><input type="password" name="password"/> </label></div>
+    <table>
+        <tr>
+            <td><spring:message code="user.name" text="default"/></td>
+            <td><input type="text" name="username"/></td>
+        </tr>
+        <tr>
+            <td><spring:message code="password" text="default"/></td>
+            <td><input type="password" name="password"/></td>
+        </tr>
+    </table>
+    <br>
     <button type="submit" class="w3-btn w3-black"><spring:message code="sign.up" text="default"/></button>
 </form>
 </div>

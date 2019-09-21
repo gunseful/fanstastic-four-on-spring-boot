@@ -25,16 +25,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
     </script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#locales").change(function () {
                 var selectedOption = $('#locales').val();
-                if (selectedOption != ''){
+                if (selectedOption != '') {
                     window.location.replace('?lang=' + selectedOption);
                 }
             });
         });
     </script>
-    <p align="center"; style="font-size: 20px; color: white" >DIGITAL STORE</p>
+    <p align="center" ; style="font-size: 20px; color: white">DIGITAL STORE</p>
 </div>
 <div class="menu">
     <table>
@@ -52,14 +52,29 @@
     <caption class="heading"><spring:message code="login.page" text="default"/></caption>
     <c:if test="${param.error}">
         <caption class="heading"><spring:message code="invalid" text="default"/></caption>
-
     </c:if>
     <form action="/login" method="post">
-        <div><label> User Name : <input type="text" name="username" required="required"/> </label></div>
-        <div><label> Password: <input type="password" name="password" required="required"/> </label></div>
+        <table>
+            <tr>
+                <td>
+                    <spring:message code="user.name" text="default"/>
+                </td>
+                <td>
+                    <input type="text" name="username" required="required"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <spring:message code="password" text="default"/>
+                </td>
+                <td>
+                    <input type="password" name="password" required="required"/>
+                </td>
+            </tr>
+        </table>
+        <br>
         <button type="submit" class="w3-btn w3-black"><spring:message code="sign.in" text="default"/></button>
     </form>
-    <a href="/registration" class="w3-btn w3-black"><spring:message code="add.new.user" text="default"/></a>
 </div>
 
 </body>

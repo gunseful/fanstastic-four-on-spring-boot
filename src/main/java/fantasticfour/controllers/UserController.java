@@ -16,7 +16,7 @@ import java.util.Map;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
 
-    public static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
 
 
     private final UserService userService;

@@ -35,18 +35,7 @@
     </script>
     <p align="center"; style="font-size: 20px; color: white" >DIGITAL STORE</p>
 </div>
-<div class="menu">
-    <table>
-        <tr>
-            <td><a href="/" class="w3-btn w3-black"><spring:message code="home" text="default"/></a>
-            </td>
-        </tr>
-        <tr>
-            <td><a href="/registration" class="w3-btn w3-black"><spring:message code="registration" text="default"/></a>
-            </td>
-        </tr>
-    </table>
-</div>
+
 <div class="menu">
     <table>
         <tr>

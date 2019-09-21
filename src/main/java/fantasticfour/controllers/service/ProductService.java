@@ -2,6 +2,7 @@ package fantasticfour.controllers.service;
 
 import fantasticfour.controllers.dao.OrderDao;
 import fantasticfour.controllers.dao.ProductDao;
+import fantasticfour.entity.Order;
 import fantasticfour.entity.Product;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,14 @@ public class ProductService {
     }
 
     public void deleteProduct(int id){
-        orderDao.findAll().forEach(p -> p.getProducts().keySet().stream().filter(o -> o.getId()==id).forEach(o -> p.getProducts().remove(o)));
+        var product = productDao.findById(id).orElseThrow(NullPointerException::new);
+        var orders =  orderDao.findAll();
+        for(Order order : orders){
+            if(order.getProducts().containsKey(product)){
+                order.getProducts().remove(product);
+                orderDao.save(order);
+            }
+        }
         productDao.deleteById(id);
     }
 }

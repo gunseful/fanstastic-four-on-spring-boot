@@ -23,16 +23,16 @@ public class OrderService {
     }
 
     public void plusProduct(User user, int id) {
-        var order = orderDao.findByUserAndStatus(user, "not_ordered");
+        var order = orderDao.findByUserAndStatus(user, "not_ordered").orElseThrow(NullPointerException::new);
         var products = order.getProducts();
-        var product = productDao.findById(id).orElse(null);
+        var product = productDao.findById(id).orElseThrow(NullPointerException::new);
         products.put(product, products.get(product) + 1);
         order.setProducts(products);
         orderDao.save(order);
     }
 
     public void minusProduct(User user, int id) {
-        var order = orderDao.findByUserAndStatus(user, "not_ordered");
+        var order = orderDao.findByUserAndStatus(user, "not_ordered").orElseThrow(NullPointerException::new);
         var products = order.getProducts();
         var product = productDao.findById(id).orElse(null);
         if (products.get(product) > 1) {
@@ -44,7 +44,7 @@ public class OrderService {
         orderDao.save(order);
     }
 
-    public List<Order> getOrdersByUser(User user){
+    public List<Order> getOrdersByUser(User user) {
         ArrayList<Order> list;
         if (user.getRoles().contains(Role.ADMIN)) {
             list = (ArrayList<Order>) orderDao.findAllByStatus("ordered");
@@ -57,38 +57,37 @@ public class OrderService {
         return list;
     }
 
-    public void makePaid(int id){
+    public void makePaid(int id) {
         var order = orderDao.findById(id).orElseThrow(NullPointerException::new);
         order.setStatus("paid");
         orderDao.save(order);
     }
 
-    public void deleteFromBasket(User user, int id){
-        var order = orderDao.findByUserAndStatus(user, "not_ordered");
-        Map<Product, Integer> products = order.getProducts();
-        Product productForDelete = null;
-        for (Product product : products.keySet()) {
-            if (product.getId() == id) {
-                productForDelete = product;
-            }
-        }
+    public void deleteFromBasket(User user, int id) {
+        var order = orderDao.findByUserAndStatus(user, "not_ordered").orElseThrow(NullPointerException::new);
+        var products = order.getProducts();
+        Product productForDelete = products.keySet()
+                .stream()
+                .filter(p -> p.getId() == id)
+                .findFirst().orElseThrow(NullPointerException::new);
         products.remove(productForDelete);
         order.setProducts(products);
         orderDao.save(order);
     }
 
-    public void addToUserBasket(User user, int id){
-        if (orderDao.findByUserAndStatus(user, "not_ordered") == null) {
-            Order order = new Order();
-            order.setProducts(new HashMap<>());
-            order.setUser(user);
-            order.setStatus("not_ordered");
-            order.setDate(java.sql.Date.valueOf(LocalDate.now()));
-            orderDao.save(order);
-        }
-        var order = orderDao.findByUserAndStatus(user, "not_ordered");
+    public void addToUserBasket(User user, int id) {
+        Order order = orderDao.findByUserAndStatus(user, "not_ordered").orElseGet(() ->
+                {
+                    Order newOrder = new Order();
+                    newOrder.setProducts(new HashMap<>());
+                    newOrder.setUser(user);
+                    newOrder.setStatus("not_ordered");
+                    newOrder.setDate(java.sql.Date.valueOf(LocalDate.now()));
+                    return newOrder;
+                }
+        );
         var products = order.getProducts();
-        var product = productDao.findById(id).orElse(null);
+        var product = productDao.findById(id).orElseThrow(NullPointerException::new);
         if (products.containsKey(product)) {
             products.put(product, products.get(product) + 1);
         } else {
@@ -96,15 +95,15 @@ public class OrderService {
         }
         order.setProducts(products);
         orderDao.save(order);
-    }
+}
 
-    public void deleteOrder(int id){
+    public void deleteOrder(int id) {
         var order = orderDao.findById(id).orElseThrow(NullPointerException::new);
         orderDao.delete(order);
     }
 
     public Order findByUserAndStatus(User user, String status) {
-        return orderDao.findByUserAndStatus(user, status);
+        return orderDao.findByUserAndStatus(user, status).orElseThrow(NullPointerException::new);
     }
 
 

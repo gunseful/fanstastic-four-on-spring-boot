@@ -95,7 +95,7 @@
                     <td><a href="/products/${product.getId()}" class="w3-btn w3-black"><spring:message code="delete" text="default"/></a></td>
                 </c:if>
                 <c:if test="${!user.roles.contains(admin)}">
-                    <td><a href="/products-to-basket/${product.getId()}" class="w3-btn w3-black"><spring:message code="add.to.basket" text="default"/></a></td>
+                    <td><a href="/basket/add/${product.getId()}" class="w3-btn w3-black"><spring:message code="add.to.basket" text="default"/></a></td>
                 </c:if>
 
             </tr>
